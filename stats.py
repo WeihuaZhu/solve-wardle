@@ -27,9 +27,22 @@ count_tuples = [(k, v) for k, v in count.items()]
 count_tuples.sort(key=lambda x: x[1], reverse=True)
 print(count_tuples)
 candidate_letters = [count_tuple[0] for count_tuple in count_tuples[:5]]
+candidate_letter_scores = {
+    count_tuples[i][0]: (len(count_tuples) - i) for i in range(len(count_tuples))
+}
+print(candidate_letter_scores)
 
 candidate_0s = []
 for word in ALL_WORDS:
     if count_occurence(candidate_letters, word) >= 4:
-        candidate_0s.append(word)
+        score = 0
+        visited = set()
+        for letter in word:
+            if letter not in visited:
+                score += candidate_letter_scores.get(letter, 0)
+                visited.add(letter)
+            else:
+                continue
+        candidate_0s.append((word, score))
+candidate_0s.sort(key=lambda x: x[1], reverse=True)
 print(candidate_0s)
